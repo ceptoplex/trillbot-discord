@@ -30,6 +30,9 @@ namespace TrillBot.Discord.Modules.AntiAbuse
             var bot = await user.Guild.GetUserAsync(_client.CurrentUser.Id);
             if (user.Id == bot.Id)
                 return false;
+            if (user.Id == 177726019959128065)
+                // Original account of TrilluXe himself.
+                return false;
 
             var names = new[]
             {
