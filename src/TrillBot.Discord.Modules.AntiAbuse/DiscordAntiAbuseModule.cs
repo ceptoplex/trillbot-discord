@@ -37,8 +37,8 @@ namespace TrillBot.Discord.Modules.AntiAbuse
             _client.JoinedGuild += OnGuildAvailable;
             _client.UserJoined += async user =>
             {
+                if (await _joinMonitoring.AddUserAsync(user, cancellationToken)) return;
                 if (await _botImpersonationMonitoring.AddUserAsync(user, cancellationToken)) return;
-                await _joinMonitoring.AddUserAsync(user, cancellationToken);
             };
             _client.UserLeft += user =>
             {

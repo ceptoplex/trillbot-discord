@@ -247,7 +247,7 @@ namespace TrillBot.Discord.Modules.AntiAbuse
             // If more than 3 user with confusable names join within one day, ban all of them automatically.
             private static class ConfusableUserCountConfiguration
             {
-                public const int Threshold = 3;
+                public const int Threshold = 5;
                 public static readonly TimeSpan Timeframe = TimeSpan.FromDays(1);
             }
         }

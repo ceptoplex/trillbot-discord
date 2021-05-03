@@ -27,7 +27,8 @@ namespace TrillBot.Discord.Modules.AntiAbuse.Confusables
             var preparedActual = await PrepareAsync(actual);
             var preparedTested = await PrepareAsync(tested);
 
-            if (preparedTested.Contains(preparedActual))
+            if (preparedActual.Length >= 8 &&
+                preparedTested.Contains(preparedActual))
                 return true;
 
             return Levenshtein.Distance(preparedActual, preparedTested) < minRequiredDistance;
