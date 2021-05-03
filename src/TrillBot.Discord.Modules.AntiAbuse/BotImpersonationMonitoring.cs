@@ -31,10 +31,22 @@ namespace TrillBot.Discord.Modules.AntiAbuse
             if (user.Id == bot.Id)
                 return false;
 
-            var botName = bot.Nickname ?? bot.Username;
+            var names = new[]
+            {
+                bot.Nickname ?? bot.Username,
+                "TrilluXe"
+            };
             var userName = user.Nickname ?? user.Username;
 
-            if (!await _confusablesDetection.TestConfusabilityAsync(botName, userName, cancellationToken))
+            string confusableName = null;
+            foreach (var name in names)
+                if (await _confusablesDetection.TestConfusabilityAsync(name, userName, cancellationToken))
+                {
+                    confusableName = name;
+                    break;
+                }
+
+            if (confusableName == null)
                 return false;
 
             var notified = await DiscordMessaging.LogUserAsync(
@@ -49,8 +61,8 @@ namespace TrillBot.Discord.Modules.AntiAbuse
                 cancellationToken: cancellationToken);
 
             // Kick afterwards, or messaging the user will not work anymore.
-            await user.KickAsync(
-                $"[{DiscordAntiAbuseModule.MessagingTag}] {_localizer["UserKickReason", userName, botName]}");
+            //await user.KickAsync(
+            //    $"[{DiscordAntiAbuseModule.MessagingTag}] {_localizer["UserKickReason", userName, confusableName]}");
             return true;
         }
     }
