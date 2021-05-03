@@ -22,7 +22,9 @@ namespace TrillBot.Discord.Modules.AntiAbuse.Confusables
             string tested,
             CancellationToken cancellationToken = default)
         {
-            var minRequiredDistance = Math.Abs(tested.Length - actual.Length) + 3;
+            var minRequiredDistance = tested.Length - actual.Length;
+            if (minRequiredDistance < 2)
+                minRequiredDistance = 2;
 
             var preparedActual = await PrepareAsync(actual);
             var preparedTested = await PrepareAsync(tested);

@@ -49,10 +49,10 @@ namespace TrillBot.Discord.Modules.AntiAbuse
             if (confusableName == null)
                 return false;
 
-            var notified = await DiscordMessaging.LogUserAsync(
-                user,
-                _localizer["YouWereKicked", bot.Guild.Name, userName],
-                cancellationToken: cancellationToken);
+            var notified = false;//await DiscordMessaging.LogUserAsync(
+            //    user,
+            //    _localizer["YouWereKicked", bot.Guild.Name, userName],
+            //    cancellationToken: cancellationToken);
             await _messaging.LogGuildAsync(
                 bot.Guild,
                 DiscordAntiAbuseModule.MessagingTag,
