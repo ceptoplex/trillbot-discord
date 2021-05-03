@@ -52,20 +52,21 @@ namespace TrillBot.Discord.Modules.AntiAbuse
             if (confusableName == null)
                 return false;
 
-            var notified = false;//await DiscordMessaging.LogUserAsync(
+            // TODO: Re-enable DMs for kicks.
+            //var notified = await DiscordMessaging.LogUserAsync(
             //    user,
             //    _localizer["YouWereKicked", bot.Guild.Name, userName],
             //    cancellationToken: cancellationToken);
             await _messaging.LogGuildAsync(
                 bot.Guild,
                 DiscordAntiAbuseModule.MessagingTag,
-                $"{_localizer["UserWasKicked", user.Mention, userName, bot.Mention]}\n" +
-                $"*{(notified ? _localizer["UserWasNotified"] : _localizer["UserWasNotNotified"])}*",
+                $"{_localizer["UserWasKicked", user.Mention, userName, bot.Mention]}"/*\n" +
+                $"*{(notified ? _localizer["UserWasNotified"] : _localizer["UserWasNotNotified"])}*"*/,
                 cancellationToken: cancellationToken);
 
             // Kick afterwards, or messaging the user will not work anymore.
-            //await user.KickAsync(
-            //    $"[{DiscordAntiAbuseModule.MessagingTag}] {_localizer["UserKickReason", userName, confusableName]}");
+            await user.KickAsync(
+                $"[{DiscordAntiAbuseModule.MessagingTag}] {_localizer["UserKickReason", userName, confusableName]}");
             return true;
         }
     }
