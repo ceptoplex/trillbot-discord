@@ -141,12 +141,12 @@ namespace TrillBot.Discord.Modules.AntiAbuse
                 if (!IsUserCountWarningRequired())
                     return;
 
-                await _guild.ModifyAsync(
+                /*await _guild.ModifyAsync(
                     _ => _.VerificationLevel = Optional.Create(VerificationLevel.Extreme),
                     new RequestOptions
                     {
                         CancelToken = cancellationToken
-                    });
+                    });*/
                 await _joinMonitoring._messaging.LogGuildAsync(
                     _guild,
                     DiscordAntiAbuseModule.MessagingTag,
