@@ -1,14 +1,11 @@
 import discord
 
+from config import Config
+
 
 class App:
     def __init__(self):
         self.client = discord.Client()
 
     def run(self):
-        # TODO: Insert token.
-        self.client.run('your token here')
-
-        @self.client.event
-        async def on_ready():
-            print(f"We have logged in as '{self.client.user}'.")
+        self.client.run(Config.get_discord_token())
