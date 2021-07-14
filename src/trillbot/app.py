@@ -3,7 +3,7 @@ import sys
 
 import discord
 
-from config import Config
+from trillbot.config import Config
 
 
 class App:
