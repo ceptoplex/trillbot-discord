@@ -1,9 +1,11 @@
 import logging
 import sys
 
-import discord
+from discord import Intents
+from discord.ext.commands import Bot
 
 from trillbot.config import Config
+from trillbot.extensions import elasticvoice
 
 
 class App:
@@ -17,7 +19,9 @@ class App:
         console_handler.setFormatter(console_formatter)
         logger.addHandler(console_handler)
 
-        self.client = discord.Client()
+        intents = Intents.all()
+        self.bot = Bot('!', intents=intents)
+        self.bot.load_extension(elasticvoice.__name__)
 
     def run(self):
-        self.client.run(Config.get_discord_token())
+        self.bot.run(Config.get_discord_token())
