@@ -60,7 +60,9 @@ class MemberMonitoring(Cog):
             reason = f"Part of the member's name is too similar to '{forbidden_name_part}'."
             await member.kick(reason=reason)
             name = member.display_name if member.display_name is not None else member.name
-            self._logger.warning(f"Kicked member {member.mention} with (display) name '{name}'). Reason: {reason}")
+            self._logger.warning(
+                f"Kicked member {member.mention} with displayed name '{name}'. Reason: {reason}",
+                extra={'guild': member.guild})
             return False
 
         return True
@@ -95,8 +97,9 @@ class MemberMonitoring(Cog):
                 await joined_member.member.kick(reason=reason)
                 name = member.display_name if member.display_name is not None else member.name
                 self._logger.warning(
-                    f"Kicked member {joined_member.member.mention} with (display) name '{name}'). "
-                    f"Reason: {reason}")
+                    f"Kicked member {joined_member.member.mention} with displayed name '{name}'. "
+                    f"Reason: {reason}",
+                    extra={'guild': joined_member.member.guild})
             return
 
         # Check name constraint.
@@ -121,8 +124,9 @@ class MemberMonitoring(Cog):
             await joined_member.member.kick(reason=reason)
             name = member.display_name if member.display_name is not None else member.name
             self._logger.warning(
-                f"Kicked member {joined_member.member.mention} with (display) name '{name}'). "
-                f"Reason: {reason}")
+                f"Kicked member {joined_member.member.mention} with displayed name '{name}'. "
+                f"Reason: {reason}",
+                extra={'guild': joined_member.member.guild})
 
     def _is_validated_member(self, member: Member):
         if member == self._bot.user:
