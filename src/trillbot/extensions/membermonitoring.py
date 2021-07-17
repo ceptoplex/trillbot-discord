@@ -48,7 +48,13 @@ class MemberMonitoring(Cog):
         await self._validate_joined_member(member)
 
     @commands.Cog.listener()
-    async def on_member_update(self, _: Member, after: Member):
+    async def on_member_update(self, before: Member, after: Member):
+        # Filter out everything but name changes.
+        before_name = before.display_name if before.display_name is not None else before.name
+        after_name = after.display_name if after.display_name is not None else after.name
+        if before_name == after_name:
+            return
+
         await self._validate_member(after)
 
     async def _validate_member(self, member: Member):
