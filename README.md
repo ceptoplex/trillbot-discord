@@ -1,6 +1,6 @@
 # TrillBot
 
-[![Build & Test](https://github.com/ceptoplex/trillbot-discord/actions/workflows/build-test.yml/badge.svg)](https://github.com/ceptoplex/trillbot-discord/actions/workflows/build-test.yml)
+[![Build, Test and Deploy](https://github.com/ceptoplex/trillbot-discord/actions/workflows/build-test-deploy.yml/badge.svg)](https://github.com/ceptoplex/trillbot-discord/actions/workflows/build-test-deploy.yml)
 
 This bot manages the [TrilluXe Community](https://discord.gg/trilluxe) Discord server. The server is owned
 by [TrilluXe](https://twitter.com/trilluxe). The maintainer of this bot is [ceptoplex](https://twitter.com/ceptoplex).
