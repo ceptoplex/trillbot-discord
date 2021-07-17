@@ -57,6 +57,7 @@ jobs:
 
   deploy:
     name: Deploy
+    needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-20.04
     env:
