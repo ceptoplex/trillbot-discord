@@ -93,7 +93,7 @@ class ElasticVoice(Cog):
 
             await empty_channels[-1].delete()
             self._logger.info(
-                f"Voice channel '{empty_channels[-1]}' was removed.",
+                f"Voice channel {empty_channels[-1].mention} with name `{empty_channels[-1].name}` was removed.",
                 extra={'guild': guild})
             return
 
@@ -105,7 +105,8 @@ class ElasticVoice(Cog):
                 continue
             if len(channel_group) >= ElasticVoice.MAX_CHANNEL_COUNT_PER_GROUP:
                 self._logger.info(
-                    f"A new voice channel was not created after '{channel_group[-1]}' "
+                    f"A new voice channel was not created after "
+                    f"{channel_group[-1].mention} with name `{channel_group[-1].name}` "
                     f"because the limit of {ElasticVoice.MAX_CHANNEL_COUNT_PER_GROUP} channels "
                     f"was reached for this group.",
                     extra={'guild': guild})
@@ -120,7 +121,7 @@ class ElasticVoice(Cog):
                 rtc_region=channel_group[-1].rtc_region,
                 position=channel_group[-1].position)
             self._logger.info(
-                f"A new voice channel '{new_channel}' was created.",
+                f"A new voice channel {new_channel.mention} with name `{new_channel.name}` was created.",
                 extra={'guild': guild})
             return
 

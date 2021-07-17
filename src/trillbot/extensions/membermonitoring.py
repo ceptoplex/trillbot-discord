@@ -57,11 +57,11 @@ class MemberMonitoring(Cog):
 
         forbidden_name_part = self._has_name_part_similar_to_forbidden_name_parts(member)
         if forbidden_name_part is not None:
-            reason = f"Part of the member's name is too similar to '{forbidden_name_part}'."
+            reason = f"A part of the member's name is too similar to `{forbidden_name_part}`."
             await member.kick(reason=reason)
             name = member.display_name if member.display_name is not None else member.name
             self._logger.warning(
-                f"Kicked member {member.mention} with displayed name '{name}'. Reason: {reason}",
+                f"Kicked member {member.mention} with displayed name `{name}`. Reason: {reason}",
                 extra={'guild': member.guild})
             return False
 
@@ -97,7 +97,7 @@ class MemberMonitoring(Cog):
                 await joined_member.member.kick(reason=reason)
                 name = member.display_name if member.display_name is not None else member.name
                 self._logger.warning(
-                    f"Kicked member {joined_member.member.mention} with displayed name '{name}'. "
+                    f"Kicked member {joined_member.member.mention} with displayed name `{name}`. "
                     f"Reason: {reason}",
                     extra={'guild': joined_member.member.guild})
             return
@@ -124,7 +124,7 @@ class MemberMonitoring(Cog):
             await joined_member.member.kick(reason=reason)
             name = member.display_name if member.display_name is not None else member.name
             self._logger.warning(
-                f"Kicked member {joined_member.member.mention} with displayed name '{name}'. "
+                f"Kicked member {joined_member.member.mention} with displayed name `{name}`. "
                 f"Reason: {reason}",
                 extra={'guild': joined_member.member.guild})
 
