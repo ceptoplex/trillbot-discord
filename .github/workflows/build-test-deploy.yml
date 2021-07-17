@@ -94,9 +94,9 @@ jobs:
           LOCAL_IMAGE: ${{ env.IAMGE_NAME }}:${{ env.IMAGE_TAG }}
           ECR_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ env.IAMGE_NAME }}:${{ env.IMAGE_TAG }}
         run: |
-          docker tag ${{ LOCAL_IMAGE }} ${{ ECR_IMAGE }}
-          docker push ${{ ECR_IMAGE }}
-          echo "::set-output name=image::${{ ECR_IMAGE }}"
+          docker tag ${{ env.LOCAL_IMAGE }} ${{ env.ECR_IMAGE }}
+          docker push ${{ env.ECR_IMAGE }}
+          echo "::set-output name=image::${{ env.ECR_IMAGE }}"
 
       - name: Create AWS ECS task definition
         id: aws-ecs-task-definition
