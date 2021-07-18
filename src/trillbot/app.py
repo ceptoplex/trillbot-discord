@@ -5,7 +5,7 @@ from discord import Intents
 from discord.ext.commands import Bot
 
 from trillbot.config import Config
-from trillbot.extensions import elasticvoice, logging, membermonitoring
+from trillbot.extensions import elasticvoice, logging, membermonitoring, messagemonitoring
 
 
 class App:
@@ -38,6 +38,7 @@ class App:
         self.bot.load_extension(elasticvoice.__name__)
         self.bot.load_extension(logging.__name__)
         self.bot.load_extension(membermonitoring.__name__)
+        self.bot.load_extension(messagemonitoring.__name__)
 
     def run(self):
         self.bot.run(Config.get_discord_token())
