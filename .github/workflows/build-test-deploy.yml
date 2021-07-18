@@ -9,13 +9,14 @@ on:
 
 name: Build, Test and Deploy
 
+env:
+  IMAGE_NAME: trillbot-discord
+  IMAGE_TAG: ${{ github.sha }}
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-20.04
-    env:
-      IMAGE_NAME: trillbot-discord
-      IMAGE_TAG: ${{ github.sha }}
 
     steps:
       - name: Checkout
@@ -60,9 +61,6 @@ jobs:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-20.04
-    env:
-      IMAGE_NAME: trillbot-discord
-      IMAGE_TAG: ${{ github.sha }}
 
     steps:
       - name: Checkout
