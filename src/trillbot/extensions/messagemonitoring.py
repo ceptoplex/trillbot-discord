@@ -1,5 +1,7 @@
 import logging
+import re
 from datetime import datetime, timedelta
+from urllib.parse import urlparse
 
 from discord import Message, Member
 from discord.ext import commands
@@ -108,35 +110,20 @@ class MessageMonitoring(Cog):
     @staticmethod
     def _contains_phishing_url(message: Message):
         content = message.content
-        if (
-            not 'http' in content and
-            not 'www' in content and
-            not '.' in content and
-            not '/' in content
-        ):
-            return None
-
         for phishing_target_domain in MessageMonitoring.PHISHING_TARGET_DOMAINS:
-            for i in range(len(content)):
-                if content[i] == '/':
-                    break
-                for j in range(i + 1, len(content)):
-                    if (
-                        content[i] == phishing_target_domain[0] and
-                        (
-                            content[j] == '/' or
-                            content[j] == phishing_target_domain[-1]
-                        )
-                    ):
-                        end = j if content[j] == '/' else j + 1
-                        potential_domain = content[i:end]
-                        # Result can be 0% to 100% similarity.
-                        result = string_metric.normalized_levenshtein(potential_domain, phishing_target_domain)
-                        if result == 100:
-                            # Exclude target domain.
-                            continue
-                        if result >= 75:
-                            return phishing_target_domain
+            url_strings = re.findall(
+                r'https?://[\w_-]+(?:(?:\.[\w_-]+)+)[\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-]?',
+                content)
+            for url_string in url_strings:
+                url = urlparse(url_string)
+                domain = str.join('.', url.netloc.split('.')[-2:])
+                # Result can be 0% to 100% similarity.
+                result = string_metric.normalized_levenshtein(domain, phishing_target_domain)
+                if result == 100:
+                    # Exclude target domain.
+                    continue
+                if result >= 75:
+                    return phishing_target_domain
         return None
 
 
