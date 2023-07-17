@@ -37,8 +37,8 @@ class App:
         self.bot = Bot('!', intents=intents)
         self.bot.load_extension(elasticvoice.__name__)
         self.bot.load_extension(logging.__name__)
-        self.bot.load_extension(membermonitoring.__name__)
-        self.bot.load_extension(messagemonitoring.__name__)
+        #self.bot.load_extension(membermonitoring.__name__)
+        #self.bot.load_extension(messagemonitoring.__name__)
 
     def run(self):
         self.bot.run(Config.get_discord_token())
