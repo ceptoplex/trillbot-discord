@@ -5,7 +5,7 @@ from discord import Intents
 from discord.ext.commands import Bot
 
 from trillbot.config import Config
-from trillbot.extensions import elasticvoice, logging, membermonitoring, messagemonitoring
+from trillbot.extensions import elasticvoice, logging
 
 
 class App:
