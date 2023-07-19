@@ -1,9 +1,10 @@
-from asyncio import Queue, ensure_future
+from asyncio import Queue
 from logging import StreamHandler, getLogger, WARNING
 from typing import Optional
 
 from discord import Guild, TextChannel
-from discord.ext.commands import Bot
+from discord.ext import tasks
+from discord.ext.commands import Bot, Cog
 
 
 class _LoggingHandler(StreamHandler):
@@ -18,34 +19,32 @@ class _LoggingHandler(StreamHandler):
         self._queue.put_nowait((guild, record.message))
 
 
-class Logging:
+class Logging(Cog):
     LOG_CHANNEL_NAME_PARTS = [
         'bot-log'
     ]
 
-    def __init__(self):
-        self._running = True
+    def __init__(self, bot: Bot):
+        self._bot = bot
+        self._queue = Queue()
 
-    def start(self, bot):
-        queue = Queue()
-
-        logging_handler = _LoggingHandler(queue)
+        logging_handler = _LoggingHandler(self._queue)
         logging_handler.setLevel(WARNING)
         logger = getLogger()
         logger.addHandler(logging_handler)
 
-        async def run():
-            while self._running:
-                (guild, message) = await queue.get()
-                channel = Logging._get_log_channel(guild)
-                if channel is None:
-                    continue
-                await channel.send(message)
+        self._run.start()
 
-        ensure_future(run(), loop=bot.loop)
+    def cog_unload(self):
+        self._run.cancel()
 
-    def stop(self):
-        self._running = False
+    @tasks.loop()
+    async def _run(self):
+        (guild, message) = await self._queue.get()
+        channel = Logging._get_log_channel(guild)
+        if channel is None:
+            return
+        await channel.send(message)
 
     @staticmethod
     def _get_log_channel(guild: Guild) -> Optional[TextChannel]:
@@ -56,12 +55,9 @@ class Logging:
         return None
 
 
-logging = Logging()
+async def setup(bot: Bot):
+    await bot.add_cog(Logging(bot))
 
 
-def setup(bot: Bot):
-    logging.start(bot)
-
-
-def teardown(bot: Bot):
-    logging.stop()
+async def teardown(bot: Bot):
+    await bot.remove_cog(Logging.__name__)

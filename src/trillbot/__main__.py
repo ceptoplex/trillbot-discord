@@ -1,4 +1,6 @@
+import asyncio
+
 from trillbot.app import App
 
 if __name__ == "__main__":
-    App().run()
+    asyncio.run(App().run())

@@ -127,9 +127,9 @@ class MessageMonitoring(Cog):
         return None
 
 
-def setup(bot: Bot):
-    bot.add_cog(MessageMonitoring(bot))
+async def setup(bot: Bot):
+    await bot.add_cog(MessageMonitoring(bot))
 
 
-def teardown(bot: Bot):
-    bot.remove_cog(MessageMonitoring.__name__)
+async def teardown(bot: Bot):
+    await bot.remove_cog(MessageMonitoring.__name__)

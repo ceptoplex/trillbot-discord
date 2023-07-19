@@ -154,9 +154,9 @@ class MemberMonitoring(Cog):
         return None
 
 
-def setup(bot: Bot):
-    bot.add_cog(MemberMonitoring(bot))
+async def setup(bot: Bot):
+    await bot.add_cog(MemberMonitoring(bot))
 
 
-def teardown(bot: Bot):
-    bot.remove_cog(MemberMonitoring.__name__)
+async def teardown(bot: Bot):
+    await bot.remove_cog(MemberMonitoring.__name__)

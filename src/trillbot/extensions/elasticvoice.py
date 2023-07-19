@@ -126,9 +126,9 @@ class ElasticVoice(Cog):
             return
 
 
-def setup(bot: Bot):
-    bot.add_cog(ElasticVoice())
+async def setup(bot: Bot):
+    await bot.add_cog(ElasticVoice())
 
 
-def teardown(bot: Bot):
-    bot.remove_cog(ElasticVoice.__name__)
+async def teardown(bot: Bot):
+    await bot.remove_cog(ElasticVoice.__name__)
