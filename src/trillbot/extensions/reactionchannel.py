@@ -51,7 +51,7 @@ class ReactionChannel(Cog):
                 new_message = await interaction.message.edit(content=interaction.message.content + content_suffix, embeds=interaction.message.embeds[-1:], view=view)
                 while len(new_message.attachments) > 0:
                     new_message = await new_message.remove_attachments(new_message.attachments[0])
-                mod_role_mentions = ' '.join([x.mention for x in await message.guild.fetch_roles() if x.permissions.manage_messages])
+                mod_role_mentions = ' '.join([x.mention for x in await message.guild.fetch_roles() if x.permissions.manage_messages and not x.permissions.administrator])
                 thread = channel.get_thread(new_message.id)
                 if thread is None:
                     thread = await new_message.create_thread(name='Meldung')
@@ -74,9 +74,9 @@ class ReactionChannel(Cog):
 
         new_message = await channel.send(content=message.content, files=files, embeds=message.embeds, view=view)
 
-        emoji = next((x for x in message.guild.emojis if x.name == 'trilluxeLECKER'), '\N{UPWARDS BLACK ARROW}')
+        emoji = '\N{UPWARDS BLACK ARROW}'
         await new_message.add_reaction(emoji)
-        emoji = next((x for x in message.guild.emojis if x.name == 'trilluxeKOTZEN'), '\N{DOWNWARDS BLACK ARROW}')
+        emoji = '\N{DOWNWARDS BLACK ARROW}'
         await new_message.add_reaction(emoji)
 
         await message.delete()
