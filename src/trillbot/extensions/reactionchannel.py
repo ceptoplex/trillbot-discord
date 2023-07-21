@@ -32,9 +32,6 @@ class ReactionChannel(Cog):
 
         files = [await x.to_file() for x in message.attachments]
 
-        embeds = message.embeds
-        embeds.append(Embed(description=f'von {author.mention}'))
-
         class ReportModal(Modal, title='Meldung (NICHT ANONYM!)'):
             reason = TextInput(label='Begründung', style=TextStyle.paragraph, placeholder='Begründung, die MIT DEINEM NAMEN und FÜR JEDEN SICHTBAR angezeigt werden soll.')
 
@@ -72,7 +69,7 @@ class ReactionChannel(Cog):
         view = View(timeout=None)
         view.add_item(ReportButton())
 
-        new_message = await channel.send(content=message.content, files=files, embeds=message.embeds, view=view)
+        new_message = await channel.send(content=message.content, files=files, embeds=message.embeds + [Embed(description=f'von {author.mention}')], view=view)
 
         emoji = '\N{UPWARDS BLACK ARROW}'
         await new_message.add_reaction(emoji)
