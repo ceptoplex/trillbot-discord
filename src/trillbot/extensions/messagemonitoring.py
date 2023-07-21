@@ -20,9 +20,7 @@ class MessageMonitoring(Cog):
         315456917785018378,  # Admin
         323334369534148610,  # Weltherrschaft
         315497366872522753,  # Crew
-        315497300237615125,  # Twitch Mod (TrilluXe)
-        431583263560171521,  # Twitch Mod (fELIXSAn)
-        780849541179506688,  # Discord Mod
+        315497300237615125,  # Mod
         321980255281741834  # VIP
     ]
     PHISHING_TARGET_DOMAINS = [

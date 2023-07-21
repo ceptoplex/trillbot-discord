@@ -5,7 +5,7 @@ from discord import Intents
 from discord.ext.commands import Bot
 
 from trillbot.config import Config
-from trillbot.extensions import elasticvoice, logging
+from trillbot.extensions import elasticvoice, logging, reactionchannel
 
 
 class _GuildFormatter(Formatter):
@@ -34,6 +34,7 @@ class _Bot(Bot):
         await self.load_extension(logging.__name__)
         #await self.load_extension(membermonitoring.__name__)
         #await self.load_extension(messagemonitoring.__name__)
+        await self.load_extension(reactionchannel.__name__)
 
 
 class App:
