@@ -16,15 +16,6 @@ class ReactionChannel(Cog):
         self._channels = []
 
     @commands.Cog.listener()
-    async def on_guild_available(self, guild):
-        for channel in [x for x in guild.channels if x.name.startswith('reaction')]:
-            async for message in channel.history():
-                embed = next((x for x in message.embeds if x.description and x.description.startswith('von')), None)
-                if embed is None:
-                    continue
-                await message.edit(content=message.content + f'\n⎯⎯⎯⎯⎯\n{embed.description}', embeds=[x for x in message.embeds if x is not embed])
-
-    @commands.Cog.listener()
     async def on_message(self, message: Message):
         author = message.author
         if author.id == self._bot.user.id:
