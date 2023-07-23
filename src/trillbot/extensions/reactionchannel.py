@@ -69,7 +69,7 @@ class ReactionChannel(Cog):
         view = View(timeout=None)
         view.add_item(ReportButton())
 
-        new_message = await channel.send(content=message.content + f'\n⎯⎯⎯⎯⎯\nvon {author.mention}', files=files, embeds=message.embeds, view=view)
+        new_message = await channel.send(content=message.content + f'\n⎯⎯⎯⎯⎯\nvon {author.mention}', files=files, view=view)
 
         emoji = '\N{UPWARDS BLACK ARROW}'
         await new_message.add_reaction(emoji)
