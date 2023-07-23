@@ -1,7 +1,7 @@
 import re
 from typing import Union
 
-from discord import ButtonStyle, DMChannel, Embed, GroupChannel, Interaction, Message, PartialMessageable, StageChannel, TextChannel, TextStyle, Thread, VoiceChannel
+from discord import ButtonStyle, DMChannel, GroupChannel, Interaction, Message, PartialMessageable, StageChannel, TextChannel, TextStyle, Thread, VoiceChannel
 from discord.ui import Button, Modal, TextInput, View
 from discord.ext import commands
 from discord.ext.commands import Bot, Cog
