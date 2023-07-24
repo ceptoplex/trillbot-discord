@@ -24,7 +24,7 @@ class MinecraftSync(Cog):
     @staticmethod
     async def _check_member_roles(member: Member):
         twitch_sub_roles = [x for x in await member.guild.fetch_roles() if 'Twitch Sub' in x.name and 'Minecraft' not in x.name]
-        minecraft_role = next((x for x in await member.guild.fetch_roles() if 'Minecraft' in x.name), None)
+        minecraft_role = next((x for x in await member.guild.fetch_roles() if 'Twitch Sub' in x.name and 'Minecraft' in x.name), None)
         if len(twitch_sub_roles) == 0 or minecraft_role is None:
             return
         if len(set(twitch_sub_roles).intersection(member.roles)) > 0 and minecraft_role not in member.roles:
