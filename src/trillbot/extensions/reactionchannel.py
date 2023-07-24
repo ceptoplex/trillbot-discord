@@ -13,7 +13,6 @@ URL_PATTERN = re.compile(r'([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-
 class ReactionChannel(Cog):
     def __init__(self, bot: Bot):
         self._bot = bot
-        self._channels = []
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
