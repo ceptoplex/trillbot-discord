@@ -8,6 +8,7 @@ from discord.ext.commands import Bot, Cog
 
 
 URL_PATTERN = re.compile(r'([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?')
+MENTION_PATTERN = re.compile(r"<@&\d+>|<@!\d+>|<@\d+>|@everyone|@here")
 
 
 class ReactionChannel(Cog):
@@ -28,6 +29,8 @@ class ReactionChannel(Cog):
             len(message.attachments) == 0):
             await message.delete()
             return
+
+        message_content = MENTION_PATTERN.sub("", message.content)
 
         files = [await x.to_file() for x in message.attachments]
 
@@ -68,7 +71,7 @@ class ReactionChannel(Cog):
         view = View(timeout=None)
         view.add_item(ReportButton())
 
-        new_message = await channel.send(content=message.content + f'\n⎯⎯⎯⎯⎯\nvon {author.mention}', files=files, view=view)
+        new_message = await channel.send(content=message_content + f'\n⎯⎯⎯⎯⎯\nvon {author.mention}', files=files, view=view)
 
         emoji = '\N{UPWARDS BLACK ARROW}'
         await new_message.add_reaction(emoji)
