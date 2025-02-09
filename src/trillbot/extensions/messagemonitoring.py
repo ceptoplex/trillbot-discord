@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from discord import Message, Member
 from discord.ext import commands
 from discord.ext.commands import Bot, Cog
-from rapidfuzz import string_metric
+from rapidfuzz import distance
 
 
 class _CaughtMember:
@@ -115,12 +115,12 @@ class MessageMonitoring(Cog):
             for url_string in url_strings:
                 url = urlparse(url_string)
                 domain = str.join('.', url.netloc.split('.')[-2:])
-                # Result can be 0% to 100% similarity.
-                result = string_metric.normalized_levenshtein(domain, phishing_target_domain)
-                if result == 100:
+                # Result can be [0, 1] where 0 means full similarity.
+                result = distance.Levenshtein.normalized_distance(domain, phishing_target_domain)
+                if result == 0:
                     # Exclude target domain.
                     continue
-                if result >= 75:
+                if result <= 0.25:
                     return phishing_target_domain
         return None
 

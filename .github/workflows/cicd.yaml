@@ -1,0 +1,154 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+name: CI/CD
+
+env:
+  IMAGE_NAME: trillbot-discord
+  IMAGE_TAG: ${{ github.sha }}-{{ github.run_number }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and export Docker image
+        run: |
+          docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+          docker save -o /tmp/${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+      - name: Upload Docker image to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar
+          path: /tmp/${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar
+
+  buildValidation:
+    name: Build Validation
+    needs: build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Docker image from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar
+          path: /tmp
+
+      - name: Load Docker image
+        run: |
+          docker load --input /tmp/${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar
+
+      - name: Run pyflakes
+        run: |
+          docker run ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} pyflakes .
+
+  deploymentValidation:
+    name: Deployment Validation
+    needs: build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.7"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Initialize Terraform
+        run: terraform init -input=false -no-color
+        working-directory: ./deployments
+
+      - name: Validate Terraform configuration
+        run: terraform validate -no-color
+        working-directory: ./deployments
+
+      - name: Show Terraform plan
+        run: |
+          terraform plan -out="terraform.tfplan" -input=false -no-color \
+            -var "image_tag=${{ env.IMAGE_TAG }}" \
+            -var "discord_token=${{ env.DISCORD_TOKEN }}"
+        working-directory: ./deployments
+
+      - name: Encrypt Terraform plan
+        run: openssl aes-256-cbc -a -salt -pbkdf2 -k ${{ secrets.ARTIFACT_ENCRYPTION_KEY }} -in terraform.tfplan -out terraform.tfplan.enc
+        working-directory: ./deployments
+
+      - name: Upload Terraform plan to artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform.tfplan.enc
+          path: ./deployments/terraform.tfplan.enc
+          if-no-files-found: error
+          retention-days: 30
+
+  deployment:
+    name: Deployment
+    needs:
+      - buildValidation
+      - deploymentValidation
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
+    environment: Production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Terraform plan from artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform.tfplan.enc
+          path: ./deployments
+
+      - name: Download Docker image from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar
+          path: /tmp
+
+      - name: Decrypt Terraform plan
+        run: openssl aes-256-cbc -d -a -pbkdf2 -k ${{ secrets.ARTIFACT_ENCRYPTION_KEY }} -in terraform.tfplan.enc -out terraform.tfplan
+        working-directory: ./deployments
+
+      - name: Load Docker image
+        run: |
+          docker load --input /tmp/${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.7"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Initialize Terraform
+        run: terraform init -input=false -no-color
+        working-directory: ./deployments
+
+      - name: Apply Terraform configuration changes
+        run: terraform apply -input=false -no-color terraform.tfplan
+        working-directory: ./deployments
