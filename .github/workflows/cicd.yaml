@@ -27,7 +27,7 @@ jobs:
           docker save -o /tmp/${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
       - name: Upload Docker image to artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar
           path: /tmp/${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar
@@ -41,7 +41,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download Docker image from artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar
           path: /tmp
@@ -120,7 +120,7 @@ jobs:
           path: ./deployments
 
       - name: Download Docker image from artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.IMAGE_NAME }}.${{ env.IMAGE_TAG }}.tar
           path: /tmp
