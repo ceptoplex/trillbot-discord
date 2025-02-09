@@ -86,7 +86,7 @@ jobs:
         run: |
           terraform plan -out="terraform.tfplan" -input=false -no-color \
             -var="image_tag=${{ env.IMAGE_TAG }}" \
-            -var="discord_token=${{ env.DISCORD_TOKEN }}"
+            -var="discord_token=${{ secrets.DISCORD_TOKEN }}"
         working-directory: ./deployments
 
       - name: Encrypt Terraform plan
