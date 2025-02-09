@@ -1,5 +1,6 @@
 resource "aws_ecr_repository" "default" {
-  name = "trillbot-discord"
+  name         = "trillbot-discord"
+  force_delete = true
 }
 
 resource "aws_ecr_lifecycle_policy" "default" {
