@@ -11,7 +11,7 @@ name: CI/CD
 
 env:
   IMAGE_NAME: trillbot-discord
-  IMAGE_TAG: ${{ github.sha }}-{{ github.run_number }}
+  IMAGE_TAG: ${{ github.sha }}-${{ github.run_number }}
 
 jobs:
   build:
