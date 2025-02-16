@@ -7,7 +7,8 @@ resource "aws_ssm_parameter" "discord_token" {
 resource "aws_ecs_task_definition" "default" {
   depends_on = [
     aws_iam_role_policy_attachment.ecs_exec_default,
-    local.ecs_task_role_policy_attachments
+    aws_iam_role_policy_attachment.ecs_exec_ssm,
+    aws_iam_role_policy_attachment.ecs_exec_logging
   ]
 
   family = "trillbot-discord"

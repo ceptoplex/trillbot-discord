@@ -66,13 +66,3 @@ resource "aws_iam_role_policy_attachment" "ecs_exec_logging" {
   role       = aws_iam_role.ecs_exec.name
   policy_arn = aws_iam_policy.ecs_exec_logging.arn
 }
-
-locals {
-  ecs_exec_role_policy_attachments = [
-    aws_iam_role_policy_attachment.ecs_exec_default,
-    aws_iam_role_policy_attachment.ecs_exec_ssm,
-    aws_iam_role_policy_attachment.ecs_exec_logging
-  ]
-  ecs_task_role_policy_attachments = [
-  ]
-}
